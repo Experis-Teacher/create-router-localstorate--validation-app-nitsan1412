@@ -14,28 +14,28 @@ export default class Contact extends Component {
     this.setState({msg: ""})
   };
 
-  savePhone(e) {
+  savePhoneNumber(e) {
     localStorage["phone"] = e.target.value;
   }
 
-  navigate = () => {
-    if (this.isPhoneValid(this.state.phone)) {
-      console.log("valid");
+  navigate = () =>  { 
+        if (this.phoneValidation (this.state.phone)) {
+      this.setState({msg: (this.phoneValidation (this.state.phone))})
+    } else {
       localStorage.setItem("phone", JSON.stringify(this.state.phone));
       this.props.history.push("/finish");
-    } else {
-      console.log("not valid");
-      this.setState({msg: "please enter a vaild phone number"})
     }
   };
 
- // checks if the phone is valid
-isPhoneValid = (phone) => {
-  var pattern = /[0-9]{1}-[0-9]{3}-[0-9]{3}-[0-9]{4}/g;
-  // var pattern = /[0-9]{6}/g;
-
-  return pattern.test(phone) || phone == "";
-}
+ phoneValidation = (phone) => {
+  if (phone.trim() === '') {
+    return `phone is required`;
+  }
+  if (/[0-9]{2,4}-[0-9]{3}-[0-9]{3}/g.test(phone)) {
+    return 'Invalid characters';
+  }
+  return null;
+};
 
   render() {
     return (
@@ -44,9 +44,8 @@ isPhoneValid = (phone) => {
         <div>{this.state.msg}</div>
         <input
           type="phone"
-          placeholder="Ente phone x-xxx-xxx-xxxx"
+          placeholder="Ente phone xxxxxxxxxx"
           className="phone"
-          // onBlur={this.savePhone}
           value={this.state.phone}
           onChange={this.handleChange}
         />
